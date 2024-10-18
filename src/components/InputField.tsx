@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Todo } from '../model';
 
 interface Props {
-  todo: string;
-  setTodo: React.Dispatch<React.SetStateAction<string>>;
-  onAddTodo: (todo: string) => void;
+  todo: Todo | null;
+  setTodo: React.Dispatch<React.SetStateAction<Todo | null>>;
+  onAddTodo: (todo: Todo) => void;
 }
 
 const InputField: React.FC<Props> = ({ todo, setTodo, onAddTodo }) => {
+  const [note, setNote] = useState('');
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onAddTodo(todo);
+
+    const newTodo: Todo = {
+      id: Date.now(),
+      notes: note,
+      isDone: false,
+    };
+    onAddTodo(newTodo);
+    setNote('');
   };
 
   return (
@@ -18,8 +28,8 @@ const InputField: React.FC<Props> = ({ todo, setTodo, onAddTodo }) => {
         className='w-96 h-10 rounded-xl border-2 border-black p-5 text-lg' 
         type="text" 
         placeholder='Type Here'
-        value={todo}
-        onChange={(e) => setTodo(e.target.value)}
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
         required 
       />
       <button 
